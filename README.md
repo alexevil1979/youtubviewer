@@ -99,6 +99,58 @@ composer install
 php frontend/cli/create_admin.php
 ```
 
+## 🔄 Workflow: правки → Git → VPS
+
+**Правило:** после любых правок в коде:
+1. Изменения отправляются в Git (`git add` → `commit` → `push`).
+2. В выводе или в коммите указываются команды для обновления на VPS (см. ниже).
+
+Так поддерживается синхронизация репозитория и сервера.
+
+### 1. После правок (локально) — отправить в Git
+
+```bash
+cd youtubviewer
+git add .
+git status                    # проверить список изменений
+git commit -m "описание правок"
+git push origin main
+```
+
+### 2. Обновление на VPS-сервере
+
+Подключитесь по SSH к серверу и выполните:
+
+```bash
+cd /path/to/youtubviewer       # путь к проекту на VPS
+
+git pull origin main
+
+# при изменении PHP-зависимостей
+composer install --no-dev
+
+# при изменении Python-зависимостей
+pip install -r requirements.txt
+
+# при изменении схемы БД (миграции)
+mysql -u USER -p DATABASE < db/schema.sql
+# или применяйте только нужные миграции вручную
+
+# перезапуск воркеров (если запущены через systemd/supervisor)
+sudo systemctl restart youtubviewer-worker
+# или убить старые процессы и запустить заново:
+# pkill -f "worker.py --mode=daemon"
+# nohup python backend/worker.py --mode=daemon >> logs/worker.log 2>&1 &
+```
+
+Краткая шпаргалка для быстрого обновления только кода (без миграций и перезапуска воркеров):
+
+```bash
+cd /path/to/youtubviewer && git pull origin main
+```
+
+---
+
 ## 💻 Использование
 
 ### Запуск веб-интерфейса
