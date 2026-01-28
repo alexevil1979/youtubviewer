@@ -1,0 +1,20 @@
+# Apache configuration
+RewriteEngine On
+
+# Redirect to login if not authenticated (optional)
+# RewriteCond %{REQUEST_URI} !^/login\.php$
+# RewriteCond %{HTTP_COOKIE} !PHPSESSID
+# RewriteRule ^(.*)$ /login.php [R=302,L]
+
+# Security headers
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+</IfModule>
+
+# PHP settings
+<IfModule mod_php.c>
+    php_value upload_max_filesize 10M
+    php_value post_max_size 10M
+</IfModule>

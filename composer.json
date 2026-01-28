@@ -1,0 +1,19 @@
+{
+    "name": "youtubviewer/web-interface",
+    "description": "Web interface for YouTube Shorts Viewer",
+    "type": "project",
+    "require": {
+        "php": ">=8.1",
+        "ext-mysqli": "*",
+        "ext-json": "*",
+        "ext-session": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "frontend/includes/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true
+    }
+}
